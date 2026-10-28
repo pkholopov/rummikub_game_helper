@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Румикуб — Подсчет очков</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <div class="container">
+        <!-- ЭКРАН 1: НАСТРОЙКА -->
+        <div id="screen-setup" class="screen active">
+            <h1>Румикуб</h1>
+            <div class="form-group">
+                <label for="player-count">Количество игроков:</label>
+                <select id="player-count" onchange="generatePlayerInputs()">
+                    <option value="2">2 игрока</option>
+                    <option value="3">3 игрока</option>
+                    <option value="4" selected>4 игрока</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="turn-time">Время на один ход (секунды):</label>
+                <input type="number" id="turn-time" min="5" max="3600" step="5" value="120">
+            </div>
+
+            <div id="players-fields-container"></div>
+
+            <div class="form-group">
+                <label>Кто ходит первым?</label>
+                <button type="button" class="btn btn-secondary btn-small" onclick="chooseRandomFirstPlayer()">Выбрать случайно</button>
+            </div>
+
+            <button class="btn btn-success" onclick="startGame()">Начать игру</button>
+        </div>
+
+        <!-- ЭКРАН 2: ИГРОВОЙ ПРОЦЕСС -->
+        <div id="screen-match" class="screen">
+            <h2>Раунд <span id="round-number-display">1</span></h2>
+            <div class="current-player-box">
+                <div>Сейчас ходит:</div>
+                <div class="current-player-name" id="current-player-name">---</div>
+            </div>
+
+            <div id="timer">02:00</div>
+
+            <button class="btn" id="next-turn-btn" onclick="nextTurn()">Следующий ход</button>
+            <button class="btn btn-success hidden" id="confirm-turn-btn" onclick="confirmTurn()">▶ Начать ход игрока</button>
+            <button class="btn btn-danger" onclick="openEndRoundScreen()">Завершить раунд</button>
+        </div>
+
+        <!-- ЭКРАН 3: ПОДСЧЕТ ОЧКОВ -->
+        <div id="screen-scoring" class="screen">
+            <h2>Конец раунда</h2>
+            <p class="screen-hint">
+                Выберите победителя и отметьте фишки, которые остались у каждого игрока, — очки посчитаются автоматически. Джокер = 30 очков.
+            </p>
+
+            <div id="scoring-inputs-container"></div>
+
+            <button class="btn btn-success" onclick="calculateAndSaveRound()">Сохранить раунд</button>
+            <button class="btn btn-secondary" onclick="backToMatch()">Назад к игре</button>
+        </div>
+
+        <!-- ЭКРАН 4: ПРОМЕЖУТОЧНЫЕ ИТОГИ -->
+        <div id="screen-totals" class="screen">
+            <h2>Таблица результатов</h2>
+            <div class="table-scroll">
+                <table id="totals-table">
+                    <!-- Заполняется динамически -->
+                </table>
+            </div>
+            <button class="btn btn-success" onclick="startNextRound()">Следующий раунд</button>
+            <button class="btn btn-danger btn-danger-slim" onclick="resetGame()">Сбросить всё / Новая игра</button>
+        </div>
+    </div>
+
+    <!-- МОДАЛЬНОЕ ОКНО ВЫБОРА ФИШЕК -->
+    <div id="tiles-modal" class="modal-overlay" onclick="if (event.target === this) closeTilesModal()">
+        <div class="modal">
+            <h3>Фишки игрока</h3>
+            <div class="modal-subtitle">
+                <span id="modal-player-name">—</span> — нажмите на фишки, которые остались на руках
+            </div>
+
+            <div id="modal-tile-grid"></div>
+
+            <div class="joker-area">
+                <span class="joker-label">Джокеры:</span>
+                <span class="tile-stepper">
+                    <button type="button" class="tile-chip joker-tile" onclick="addModalJoker()">J<i class="tile-count" id="joker-count-badge"></i></button>
+                    <button type="button" class="tile-minus" id="joker-minus-btn" hidden onclick="removeModalJoker()">−</button>
+                </span>
+                <span class="small-hint">Джокер = 30 очков</span>
+            </div>
+
+            <div class="modal-total">
+                <span>Очки за фишки:</span>
+                <span id="modal-total-value">0</span>
+            </div>
+
+            <div class="modal-controls">
+                <button type="button" class="btn btn-secondary" id="undo-modal-btn" onclick="undoModalAction()" disabled>↩ Отменить</button>
+                <button type="button" class="btn btn-secondary" onclick="clearModalRack()">Очистить</button>
+                <button type="button" class="btn btn-success" onclick="saveModalRack()">Готово</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- КОНТЕЙНЕР УВЕДОМЛЕНИЙ -->
+    <div id="toast-container"></div>
+
+    <script src="app.js"></script>
+</body>
+</html>

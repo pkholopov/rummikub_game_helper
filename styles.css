@@ -1,0 +1,585 @@
+/* ============================================================
+   Румикуб — Подсчёт очков
+   Файл: styles.css — все стили приложения
+   ============================================================ */
+
+:root {
+    --bg-color: #f4f7f6;
+    --card-bg: #ffffff;
+    --text-color: #2c3e50;
+    --primary: #3498db;
+    --primary-hover: #2980b9;
+    --success: #2ecc71;
+    --danger: #e74c3c;
+    --warning: #f1c40f;
+    --border-radius: 12px;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    padding: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.container {
+    background: var(--card-bg);
+    padding: 25px;
+    border-radius: var(--border-radius);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+    width: 100%;
+    max-width: 500px;
+    transition: all 0.3s ease;
+}
+
+h1, h2, h3 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* === Переключение экранов === */
+.screen {
+    display: none;
+}
+
+.screen.active {
+    display: block;
+}
+
+/* === Формы === */
+.form-group {
+    margin-bottom: 15px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+select, input[type="text"], input[type="number"] {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 16px;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+select:focus, input:focus {
+    border-color: var(--primary);
+}
+
+.screen-hint {
+    text-align: center;
+    margin-bottom: 15px;
+    font-size: 14px;
+    color: #7f8c8d;
+}
+
+.table-scroll {
+    overflow-x: auto;
+}
+
+/* === Строка ввода игрока на экране настройки === */
+.player-input-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.player-input-row input[type="text"] {
+    flex: 1;
+}
+
+.player-input-row input[type="radio"],
+.score-input-card input[type="radio"] {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    accent-color: var(--primary);
+    cursor: pointer;
+}
+
+.first-player-label {
+    margin: 0;
+    font-weight: 600;
+    font-size: 13px;
+    white-space: nowrap;
+    cursor: pointer;
+    color: var(--primary);
+}
+
+/* === Кнопки === */
+.btn {
+    display: block;
+    width: 100%;
+    padding: 14px;
+    background-color: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s;
+    margin-top: 15px;
+}
+
+.btn:hover {
+    background-color: var(--primary-hover);
+}
+
+.btn:active {
+    transform: scale(0.98);
+}
+
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.btn-success { background-color: var(--success); }
+.btn-success:hover { background-color: #27ae60; }
+
+.btn-danger { background-color: var(--danger); }
+.btn-danger:hover { background-color: #c0392b; }
+
+.btn-secondary { background-color: #95a5a6; }
+.btn-secondary:hover { background-color: #7f8c8d; }
+
+.btn-small {
+    padding: 8px;
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+.btn-danger-slim {
+    margin-top: 30px;
+    opacity: 0.7;
+}
+
+/* === Экран игры === */
+.current-player-box {
+    text-align: center;
+    background: #eef2f7;
+    padding: 20px;
+    border-radius: var(--border-radius);
+    margin-bottom: 20px;
+}
+
+.current-player-name {
+    font-size: 28px;
+    font-weight: bold;
+    color: var(--primary);
+}
+
+#timer {
+    font-size: 48px;
+    font-weight: bold;
+    text-align: center;
+    margin: 20px 0;
+    font-variant-numeric: tabular-nums;
+    transition: color 0.3s;
+}
+
+.timer-warning {
+    color: var(--danger);
+    animation: blink 1s infinite;
+}
+
+@keyframes blink {
+    50% { opacity: 0.5; }
+}
+
+/* === Кнопка подтверждения начала хода === */
+#confirm-turn-btn {
+    animation: turn-glow 1.2s ease-in-out infinite;
+}
+
+@keyframes turn-glow {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(46,204,113,0.45); }
+    50% { box-shadow: 0 0 0 12px rgba(46,204,113,0); }
+}
+
+/* === Таблица результатов === */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+    margin-bottom: 20px;
+}
+
+th, td {
+    border: 1px solid #e2e8f0;
+    padding: 10px;
+    text-align: center;
+}
+
+th {
+    background-color: #f8fafc;
+    font-weight: 600;
+}
+
+tr.total-row {
+    font-weight: bold;
+    background-color: #eef2f7;
+}
+
+/* === Карточки подсчёта очков === */
+.score-input-card {
+    background: #fdfefe;
+    border: 1px solid #e2e8f0;
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.score-input-card .winner-line {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+    padding: 6px 8px;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    transition: background-color 0.2s, border-color 0.2s;
+    cursor: pointer;
+}
+
+.score-input-card .winner-line label {
+    margin: 0;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.score-input-card .winner-line .winner-hint {
+    font-size: 12px;
+    color: #7f8c8d;
+}
+
+.score-input-card .winner-line.is-winner {
+    background: #eafaf1;
+    border-color: var(--success);
+}
+
+.score-input-card.card-pending {
+    border-color: var(--warning);
+    background: #fefbea;
+}
+
+.winner-badge {
+    display: none;
+    margin-left: auto;
+    background: var(--success);
+    color: white;
+    font-size: 11px;
+    font-weight: bold;
+    padding: 3px 8px;
+    border-radius: 4px;
+    white-space: nowrap;
+}
+
+.joker-btn {
+    background: var(--warning);
+    border: none;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    cursor: pointer;
+    margin-top: 5px;
+    font-weight: bold;
+}
+
+/* === Сводка по оставшимся фишкам === */
+.pick-tiles-btn {
+    width: auto;
+    padding: 8px 14px;
+    margin-top: 6px;
+    font-size: 14px;
+}
+
+.rack-summary {
+    margin: 8px 0 4px;
+    min-height: 24px;
+    font-size: 13px;
+    color: #555;
+}
+
+.rack-chips {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: 3px;
+    align-items: center;
+}
+
+.mini-chip {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 22px;
+    height: 22px;
+    border-radius: 5px;
+    color: #fff;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 0 5px;
+    box-shadow: inset 0 -2px 0 rgba(0,0,0,0.2);
+}
+
+.mini-chip.joker-mini {
+    background: repeating-linear-gradient(45deg, #ecf0f1, #ecf0f1 4px, #bdc3c7 4px, #bdc3c7 8px);
+    color: #2c3e50;
+}
+
+.rack-total {
+    font-weight: bold;
+    margin-left: 6px;
+    color: var(--text-color);
+}
+
+.winner-rack-empty {
+    color: #7f8c8d;
+    font-style: italic;
+}
+
+.warning-hint {
+    color: #b9770e;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+/* === Модальное окно выбора фишек === */
+.modal-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.55);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 15px;
+}
+
+.modal-overlay.open {
+    display: flex;
+}
+
+.modal {
+    background: var(--card-bg);
+    border-radius: var(--border-radius);
+    padding: 20px;
+    width: 100%;
+    max-width: 680px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+}
+
+.modal h3 {
+    text-align: center;
+    margin-bottom: 5px;
+}
+
+.modal-subtitle {
+    text-align: center;
+    font-size: 13px;
+    color: #7f8c8d;
+    margin-bottom: 15px;
+}
+
+.tile-color-section {
+    margin-bottom: 12px;
+}
+
+.tile-color-label {
+    font-weight: 600;
+    font-size: 13px;
+    margin-bottom: 5px;
+}
+
+.tile-steppers {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.tile-stepper {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.tile-chip {
+    position: relative;
+    width: 36px;
+    height: 36px;
+    border: none;
+    border-radius: 8px;
+    background: var(--chip-bg, #95a5a6);
+    color: var(--chip-fg, #fff);
+    font-size: 14px;
+    font-weight: bold;
+    font-style: normal;
+    cursor: pointer;
+    box-shadow: inset 0 -3px 0 rgba(0,0,0,0.25);
+    transition: transform 0.1s;
+}
+
+.tile-chip:active {
+    transform: scale(0.9);
+}
+
+.tile-chip .tile-count {
+    position: absolute;
+    top: -7px;
+    right: -7px;
+    min-width: 17px;
+    height: 17px;
+    padding: 0 4px;
+    border-radius: 9px;
+    background: var(--danger);
+    color: #fff;
+    font-size: 11px;
+    font-weight: bold;
+    font-style: normal;
+    display: none;
+    align-items: center;
+    justify-content: center;
+}
+
+.tile-minus {
+    width: 20px;
+    height: 16px;
+    margin-top: 3px;
+    border: none;
+    border-radius: 4px;
+    background: #ecf0f1;
+    color: #7f8c8d;
+    font-size: 12px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.tile-minus[hidden] {
+    display: none;
+}
+
+.joker-area {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 15px 0;
+    padding: 12px;
+    background: #fdfefe;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+}
+
+.joker-label {
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.small-hint {
+    font-size: 12px;
+    color: #7f8c8d;
+}
+
+.joker-tile {
+    background: repeating-linear-gradient(45deg, #ecf0f1, #ecf0f1 4px, #bdc3c7 4px, #bdc3c7 8px);
+    color: #2c3e50;
+    width: 40px;
+    height: 40px;
+}
+
+.modal-total {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 12px 0;
+    padding: 12px;
+    background: #eef2f7;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.modal-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.modal-controls .btn {
+    margin-top: 0;
+    flex: 1 1 auto;
+}
+
+.modal-controls .btn-success {
+    flex: 1 1 100%;
+}
+
+/* === Кастомные уведомления (тосты) === */
+#toast-container {
+    position: fixed;
+    top: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2000;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: min(92vw, 380px);
+    pointer-events: none;
+}
+
+.toast {
+    background: var(--text-color);
+    color: #fff;
+    padding: 12px 16px;
+    border-radius: 10px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    animation: toast-in 0.25s ease;
+}
+
+.toast.toast-error { background: var(--danger); }
+.toast.toast-success { background: var(--success); }
+.toast.toast-warning { background: #b9770e; }
+.toast.toast-info { background: var(--primary); }
+
+.toast.hiding {
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+@keyframes toast-in {
+    from { opacity: 0; transform: translateY(-12px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* === Утилиты === */
+.hidden {
+    display: none !important;
+}
